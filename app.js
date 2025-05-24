@@ -10,10 +10,10 @@ const authMiddleware = require('./middleware');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/computers', authMiddleware);
-app.use('/shutdown', authMiddleware);
-app.use('/shutdown-all', authMiddleware);
-app.use('/remove', authMiddleware);
+app.use('/rdc-computers', authMiddleware);
+app.use('/rdc-shutdown', authMiddleware);
+app.use('/rdc-shutdown-all', authMiddleware);
+app.use('/rdc-remove', authMiddleware);
 
 const port = 5000;
 const server = app.listen(port, () => {
@@ -54,13 +54,13 @@ wss.on('connection', (ws) => {
 });
 
 // REST API
-app.get('/computers', (req, res) => {
+app.get('/rdc-computers', (req, res) => {
   console.log("get computers called")
   const allClients = getClients();
   res.json(Object.values(allClients));
 });
 
-app.post('/shutdown/:computerName', (req, res) => {
+app.post('/rdc-shutdown/:computerName', (req, res) => {
   console.log("shutdown called")
   const { computerName } = req.params;
   if (clients[computerName]) {
@@ -71,7 +71,7 @@ app.post('/shutdown/:computerName', (req, res) => {
   }
 });
 
-app.post('/shutdown-all', (req, res) => {
+app.post('/rdc-shutdown-all', (req, res) => {
   console.log("shutdown-all called")
   for (let name in clients) {
     clients[name].send(JSON.stringify({ type: "shutdown" }));
@@ -79,7 +79,7 @@ app.post('/shutdown-all', (req, res) => {
   res.json({ message: "Shutdown command sent to ALL clients." });
 });
 
-app.delete('/remove/:computerName', (req, res) => {
+app.delete('/rdc-remove/:computerName', (req, res) => {
   console.log("remove called for:", req.params.computerName);
   try {
     const { computerName } = req.params;
