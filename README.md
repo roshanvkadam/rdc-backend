@@ -37,7 +37,7 @@ npm install express ws cors
 Start the server:
 
 ```bash
-node server.js
+node app.js
 ```
 
 The server runs on:
